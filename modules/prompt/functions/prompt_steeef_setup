@@ -13,11 +13,16 @@
 #
 
 function prompt_steeef_precmd {
+  # Get Git repository information.
+  if (( $+functions[git-info] )); then
+    git-info
+  fi
+
   # Check for untracked files or updated submodules since vcs_info does not.
   if [[ -n $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
-    branch_format="(${_prompt_steeef_colors[1]}%b%f%u%c${_prompt_steeef_colors[4]}●%f)"
+    branch_format="${_prompt_steeef_colors[1]}%b%f[%u%c]${_prompt_steeef_colors[4]}%f"
   else
-    branch_format="(${_prompt_steeef_colors[1]}%b%f%u%c)"
+    branch_format="${_prompt_steeef_colors[1]}%b%f[%u%c]"
   fi
 
   zstyle ':vcs_info:*:prompt:*' formats "${branch_format}"
@@ -67,26 +72,47 @@ function prompt_steeef_setup {
   #   %a - action (e.g. rebase-i)
   #   %R - repository path
   #   %S - path in the repository
-  local branch_format="(${_prompt_steeef_colors[1]}%b%f%u%c)"
-  local action_format="(${_prompt_steeef_colors[5]}%a%f)"
-  local unstaged_format="${_prompt_steeef_colors[2]} ●%f"
-  local staged_format="${_prompt_steeef_colors[5]} ●%f"
+  local branch_format="${_prompt_steeef_colors[1]}%b%f[%u%c]"
+  local action_format="[${_prompt_steeef_colors[5]}%a%f)]"
+  local unstaged_format="!"
+  local staged_format="+"
 
   # Set vcs_info parameters.
-  zstyle ':vcs_info:*' enable bzr git hg svn
+  zstyle ':vcs_info:*' enable bzr hg svn
   zstyle ':vcs_info:*:prompt:*' check-for-changes true
-  zstyle ':vcs_info:*:prompt:*' unstagedstr "${unstaged_format}"
-  zstyle ':vcs_info:*:prompt:*' stagedstr "${staged_format}"
+  zstyle ':vcs_info:*:prompt:*' unstagedstr "!"
+  zstyle ':vcs_info:*:prompt:*' stagedstr "+"
   zstyle ':vcs_info:*:prompt:*' actionformats "${branch_format}${action_format}"
   zstyle ':vcs_info:*:prompt:*' formats "${branch_format}"
   zstyle ':vcs_info:*:prompt:*' nvcsformats   ""
+
+  # Set git-info parameters.
+  zstyle ':prezto:module:git:info' verbose 'yes'
+  zstyle ':prezto:module:git:info:action' format '%s'
+  zstyle ':prezto:module:git:info:added' format '✚'
+  zstyle ':prezto:module:git:info:ahead' format '⬆'
+  zstyle ':prezto:module:git:info:behind' format '⬇'
+  zstyle ':prezto:module:git:info:branch' format ' %b'
+  zstyle ':prezto:module:git:info:commit' format '➦ %.7c'
+  zstyle ':prezto:module:git:info:deleted' format '✖'
+  zstyle ':prezto:module:git:info:modified' format '✱'
+  zstyle ':prezto:module:git:info:position' format '%p'
+  zstyle ':prezto:module:git:info:renamed' format '➙'
+  zstyle ':prezto:module:git:info:stashed' format '$'
+  zstyle ':prezto:module:git:info:unmerged' format '═'
+  zstyle ':prezto:module:git:info:untracked' format '?'
+  zstyle ':prezto:module:git:info:keys' format \
+    'ref' '%b' \
+    'status' '[%s%D%A%B%S%a%d%m%r%U%u]'
+
+
 
   # Set python-info parameters.
   zstyle ':prezto:module:python:info:virtualenv' format 'via %v'
 
   # Define prompts.
   PROMPT="
-${_prompt_steeef_colors[5]}%~%f "'$python_info[virtualenv]'" "'${vcs_info_msg_0_}'"
+${_prompt_steeef_colors[5]}%~%f "'$python_info[virtualenv]'" "'${git_info[ref]}${git_info[status]}'"
 ""❯ "
   RPROMPT=''
 }
