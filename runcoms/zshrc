@@ -12,7 +12,6 @@ fi
 
 
 # Customize to your needs...
-export WORKON_HOME=$HOME/.virtualenvs
 
 # source /usr/bin/virtualenvwrapper.sh
 
@@ -24,5 +23,14 @@ function spectrum_ls() {
       print -P -- "$code: %{$FG[$code]%}$ZSH_SPECTRUM_TEXT%{$reset_color%}"
   done
 }
+
+#compdef pipenv
+_pipenv() {
+  eval $(env COMMANDLINE="${words[1,$CURRENT]}" _PIPENV_COMPLETE=complete-zsh  pipenv)
+}
+if [[ "$(basename ${(%):-%x})" != "_pipenv" ]]; then
+  autoload -U compinit && compinit
+  compdef _pipenv pipenv
+fi
 
 alias qmacs="emacs -nw -Q"
