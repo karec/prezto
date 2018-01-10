@@ -27,3 +27,5 @@ function spectrum_ls() {
 
 
 alias qmacs="emacs -nw -Q"
+
+export EDITOR="qmacs"
