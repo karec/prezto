@@ -25,3 +25,5 @@ function spectrum_ls() {
 }
 
 alias qmacs="emacs -nw -Q"
+
+export PROJECT_HOME="$HOME/projects"
