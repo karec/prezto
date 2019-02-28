@@ -14,6 +14,8 @@ fi
 # Customize to your needs...
 
 # source /usr/bin/virtualenvwrapper.sh
+# poetry auto-complete
+fpath+=~/.zfunc
 
 ZSH_SPECTRUM_TEXT=${ZSH_SPECTRUM_TEXT:-Arma virumque cano Troiae qui primus ab oris}
 
@@ -24,6 +26,14 @@ function spectrum_ls() {
   done
 }
 
-alias qmacs="emacs -nw -Q"
+alias qmacs="emacsclient -t"
+alias emc="emacsclient -nc"
+export VISUAL="emacsclient -c"
+export EDITOR="emacsclient -t"
+
 
 export PROJECT_HOME="$HOME/projects"
+
+
+# pipenv auto-complete
+eval "$(pipenv --completion)"
