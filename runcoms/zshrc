@@ -28,7 +28,7 @@ function spectrum_ls() {
 
 alias qmacs="emacsclient -t"
 alias emc="emacsclient -nc"
-export VISUAL="emacsclient -c"
+export VISUAL="emacsclient -t"
 export EDITOR="emacsclient -t"
 
 
